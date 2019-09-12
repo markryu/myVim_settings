@@ -1,21 +1,47 @@
-" open terminal
-noremap <C-d> :term<cr>
+set nocompatible              " be iMproved, required
+filetype off                  " required
+set encoding=utf-8
 
-" for saving folds when closing and opening
-autocmd BufWinLeave *.* mkview
-autocmd BufWinEnter *.* silent loadview
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
 
-" nerdtree autoopen
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
 
-" nerdtree toggle
-map <C-n> :NERDTreeToggle<CR>
+Plugin 'tmhedberg/SimpylFold'
 
-" splits
-set splitbelow
-set splitright
+Plugin 'vim-scripts/indentpython.vim'
 
+Bundle 'Valloric/YouCompleteMe'
+
+Plugin 'vim-syntastic/syntastic'
+
+Plugin 'scrooloose/nerdtree'
+
+Plugin 'jistr/vim-nerdtree-tabs'
+
+Plugin 'kien/ctrlp.vim'
+
+Plugin 'tpope/vim-fugitive'
+
+Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+
+Plugin 'prettier/vim-prettier'
+
+Plugin 'morhetz/gruvbox'
+
+Plugin 'mattn/emmet-vim'
+
+
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+
+"split navigations
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -28,43 +54,51 @@ set foldlevel=99
 " Enable folding with the spacebar
 nnoremap <space> za
 
-" pep8 spacing
+" To see docstrings in folded code
+let g:SimpylFold_docstring_preview=1
+
+" Spacing
 au BufNewFile,BufRead *.py
-    \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
-    \ set textwidth=79
-    \ set expandtab
-    \ set autoindent
-    \ set fileformat=unix
+    \ set tabstop=4 |
+    \ set softtabstop=4 |
+    \ set shiftwidth=4 |
+    \ set textwidth=79 |
+    \ set expandtab |
+    \ set autoindent |
+    \ set fileformat=unix |
 
-"utf-8 support
-set encoding=utf-8
+au BufNewFile,BufRead *.js,*.html,*.css
+    \ set tabstop=2 |
+    \ set softtabstop=2 |
+    \ set shiftwidth=2 |
+
+" flag unnecessary whitespace
+au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+
+" to call bg schemes
+nnoremap <F5> :call togglebg#map() <cr>
+
+" invoke terminal
+nnoremap <c-d> :term <cr>
+
+" prettify
+nnoremap <F3> :PrettierAsync<cr>
+
+" colorscheme
+set background=dark    " Setting dark mode
+colorscheme gruvbox
+
+" Nerdtree
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+map <C-n> :NERDTreeToggle<CR>
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+
+" <t-k> 
+nnoremap <c-k> :tabnext <cr>
+nnoremap <c-l> :tabedit <cr>
+nnoremap <c-j> :tabprevious <cr>
 
 
-" <gt> for changing tabs
-" :tabedit filename for opening new file in a new tab
-" :tabn :tabp
-" :tabonly for closing all except this one
-" :mksession header-files-work.vim to save session
-" :vim -S header-files-work.vim then :source header-files-work.vim
-" to save :mks!
-" :5,16fo to fold the code
-" :zo to unfold and zc to close the fold, 
-" use za to toggle
-" use i or o when opening a new file for types of split
-"
-"
-"
-
-
-set backspace=indent,eol,start
-
-
-" gui
-if has('gui_running')
-  set background=dark
-  colorscheme solarized
-else
-  colorscheme zenburn
-endif
+let g:user_emmet_leader_key='<C-J>'
